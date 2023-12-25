@@ -1,0 +1,26 @@
+{
+  "name": "@mono/emails",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "emails:dev": "maizzle serve",
+    "emails:build": "maizzle build production",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.421.0",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.3",
+    "@mono/tsconfig": "workspace:*",
+    "@aws-sdk/types": "^3.418.0",
+    "@maizzle/framework": "~4.6.0",
+    "@mono/eslint-config-typescript": "workspace:*",
+    "front-matter": "^4.0.2",
+    "markdown-it-attrs": "^4.1.4",
+    "tailwindcss-box-shadow": "^2.0.0",
+    "tailwindcss-email-variants": "^2.0.3",
+    "tailwindcss-mso": "^1.3.0"
+  }
+}

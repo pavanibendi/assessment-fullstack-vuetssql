@@ -1,0 +1,12 @@
+{
+  "name": "@mono/validation",
+  "version": "1.0.0",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@mono/eslint-config-typescript": "workspace:*",
+    "@mono/tsconfig": "workspace:*"
+  }
+}

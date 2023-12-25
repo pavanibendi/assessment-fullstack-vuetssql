@@ -1,0 +1,43 @@
+{
+    "eslint.workingDirectories": [
+        "./apps/*",
+        "./packages/*"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "Vue.volar"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "git.enableSmartCommit": false,
+    "git.suggestSmartCommit": false,
+    "gitlens.hovers.currentLine.over": "line",
+    "gitlens.currentLine.enabled": false,
+    "gitlens.codeLens.enabled": false,
+    "gitlens.views.repositories.branches.layout": "list",
+    "extensions.ignoreRecommendations": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "i18n-ally.extract.autoDetect": true,
+    "i18n-ally.extract.keyMaxLength": 20,
+    "i18n-ally.annotations": false,
+    "sqltools.codelensLanguages": [
+        "sql",
+        "pgsql"
+    ],
+    "vue.features.complete.propNameCasing": "autoCamel"
+}

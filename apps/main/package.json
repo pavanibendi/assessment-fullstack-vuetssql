@@ -1,0 +1,27 @@
+{
+  "name": "@mono/main",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "start": "nuxt start",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typechecknuxt": "nuxt typecheck",
+    "cleanup": "nuxt cleanup"
+  },
+  "devDependencies": {
+    "@mono/ui": "workspace:*",
+    "@mono/validation": "workspace:*",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@pinia/nuxt": "^0.4.9",
+    "@tanstack/vue-query": "^4.29.1",
+    "@trpc/client": "^10.38.4",
+    "@mono/api": "workspace:*",
+    "@mono/eslint-config-nuxt": "workspace:*",
+    "@trpc/server": "^10.38.4",
+    "nuxt": "~3.7.4",
+    "nuxt-typed-router": "^3.1.5"
+  }
+}

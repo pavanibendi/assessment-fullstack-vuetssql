@@ -1,0 +1,31 @@
+{
+  "name": "@mono/cdk",
+  "version": "0.1.0",
+  "bin": {
+    "mono-cdk": "bin/index.js"
+  },
+  "scripts": {
+    "cdk:deploy": "cdk deploy --profile jdwly",
+    "cdk:destroy": "cdk destroy --profile jdwly",
+    "cdk:deploy:dev": "set ENVIRONMENT_NAME=development&& cdk deploy --profile jdwly",
+    "cdk:destroy:dev": "set ENVIRONMENT_NAME=development&& cdk destroy --profile jdwly",
+    "cdk:diff": "cdk diff --profile jdwly",
+    "cdk:bootstrap": "cdk bootstrap --profile jdwly",
+    "cdk:synth": "cdk synth --output cdk.outsynth"
+  },
+  "devDependencies": {
+    "@aws-cdk/aws-apprunner-alpha": "2.98.0-alpha.0",
+    "@aws-sdk/client-s3": "^3.421.0",
+    "@aws-sdk/client-sqs": "^3.421.0",
+    "@mono/eslint-config-typescript": "workspace:*",
+    "@mono/validation": "workspace:*",
+    "@types/aws-lambda": "^8.10.122",
+    "@types/node": "^18.16.0",
+    "aws-cdk": "2.98.0",
+    "aws-cdk-lib": "2.98.0",
+    "constructs": "^10.2.70",
+    "sharp": "^0.32.6",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.1"
+  }
+}

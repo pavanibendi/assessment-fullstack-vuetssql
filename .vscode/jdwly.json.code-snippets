@@ -1,0 +1,37 @@
+{
+	"v3ts": {
+		"prefix": "v3ts",
+		"description": "Vue 3 TS base",
+		"scope": "vue",
+		"body": [
+			"<script setup lang=\"ts\"></script>",
+			"",
+			"<template>",
+			"  <div>",
+			"    <h1>Template</h1>",
+			"  </div>",
+			"</template>"
+		]
+	},
+	"v3props": {
+		"prefix": "v3props",
+		"description": "Vue 3 TS props",
+		"scope": "typescript",
+		"body": [
+			"// eslint-disable-next-line vue/no-setup-props-destructure",
+			"const { isTrue } = defineProps<{",
+			"  isTrue: boolean;",
+			"}>();",
+		]
+	},
+	"v3emit": {
+		"prefix": "v3emit",
+		"description": "Vue 3 TS emit",
+		"scope": "typescript",
+		"body": [
+			"const emit = defineEmits<{",
+			"  (e: \"update:modelValue\", value: boolean): void;",
+			"}>();",
+		]
+	},
+}

@@ -15,7 +15,7 @@ const emit = defineEmits<{
         })
       "
     >
-      Jdwly App
+      My App
     </div>
   </MAppbar>
 </template>

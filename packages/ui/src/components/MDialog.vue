@@ -12,7 +12,6 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
 }>();
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const {
   modelValue = false,
   title,
@@ -31,7 +30,7 @@ watch(
   () => modelValue,
   (value) => {
     open.value = value;
-  }
+  },
 );
 
 const handleClose = () => {

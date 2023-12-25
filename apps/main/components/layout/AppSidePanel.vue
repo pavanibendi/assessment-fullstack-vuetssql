@@ -2,7 +2,7 @@
 const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
 }>();
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { modelValue } = defineProps<{
   modelValue: boolean;
 }>();

@@ -14,7 +14,6 @@
   "devDependencies": {
     "@types/mustache": "^4.2.3",
     "@mono/tsconfig": "workspace:*",
-    "@aws-sdk/types": "^3.418.0",
     "@maizzle/framework": "~4.6.0",
     "@mono/eslint-config-typescript": "workspace:*",
     "front-matter": "^4.0.2",

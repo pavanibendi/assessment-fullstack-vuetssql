@@ -8,7 +8,7 @@ const emit = defineEmits<{
   (e: "submit", values: unknown): void;
   (e: "update:valid", valid: boolean): void;
 }>();
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { zodSchema } = defineProps<{
   zodSchema: ZodObject<ZodRawShape>;
 }>();
@@ -34,7 +34,7 @@ const onSubmit = handleSubmit(
       values,
       errors,
     });
-  }
+  },
 );
 </script>
 

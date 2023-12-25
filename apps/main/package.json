@@ -8,7 +8,7 @@
     "start": "nuxt start",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typechecknuxt": "nuxt typecheck",
+    "typecheck": "nuxt typecheck",
     "cleanup": "nuxt cleanup"
   },
   "devDependencies": {

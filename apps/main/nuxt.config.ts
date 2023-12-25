@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "Jdwly",
+      title: "My App",
       meta: [
         {
           name: "viewport",

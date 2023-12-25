@@ -10,7 +10,7 @@ type ListItem = {
   icon?: ConcreteComponent;
   count?: string;
 };
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { item, active } = defineProps<{
   item: ListItem;
   active?: boolean;

@@ -1,10 +1,6 @@
-# Jdwly Monorepo
+# Example Monorepo
 
-This is a monorepo for jdwly. It runs on [Turborepo](https://turbo.build/repo) & [pnpm](https://pnpm.io).
-
-## Jdwly Project Brief
-
-Jdwly is a scheduling solution offered as a B2B SaaS.
+This is a monorepo for a fullstack typescript app, using Nuxt 3 on the frontend. It runs on [Turborepo](https://turbo.build/repo) & [pnpm](https://pnpm.io).
 
 ### Monorepo Setup
 
@@ -15,7 +11,7 @@ This monorepo is broken down into two types of workspaces:
 
 ### Using The Monorepo
 
-Node v18+, pnpm v8+ (recommend installing using corepack), and Postgres are what we use to develop in this monorepo.
+Node v18+, pnpm v8+ (recommended to install using corepack), and Postgres are what we use to develop in this monorepo.
 
 Install dependencies:
 
@@ -27,4 +23,16 @@ Run the dev environment:
 
 ```bash
 pnpm dev
+```
+
+Run typechecks:
+    
+```bash
+pnpm typecheck
+```
+
+Run linting:
+
+```bash
+pnpm lint
 ```

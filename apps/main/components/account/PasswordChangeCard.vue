@@ -6,7 +6,6 @@ import {
 const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const { refresh } = defineProps<{
   refresh: () => void;
 }>();

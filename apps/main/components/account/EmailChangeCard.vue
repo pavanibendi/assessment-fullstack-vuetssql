@@ -3,7 +3,7 @@ import {
   emailChangeRequestSchema,
   EmailChangeRequestSchemaType,
 } from "@mono/validation/lib/account";
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { refresh } = defineProps<{
   refresh: () => void;
 }>();
@@ -17,7 +17,7 @@ const email = ref("");
 const { mutate, isLoading } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.account.emailChangeRequest.mutate(
-      v as EmailChangeRequestSchemaType
+      v as EmailChangeRequestSchemaType,
     ),
   onSuccess: () => {
     requestPending.value = true;

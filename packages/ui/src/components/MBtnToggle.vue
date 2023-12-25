@@ -3,7 +3,6 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const { modelValue, items } = defineProps<{
   modelValue?: string;
   items: {

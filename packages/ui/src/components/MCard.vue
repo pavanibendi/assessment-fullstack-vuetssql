@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// eslint-disable-next-line vue/no-setup-props-destructure
 const { title, description } = defineProps<{
   title?: string;
   description?: string;

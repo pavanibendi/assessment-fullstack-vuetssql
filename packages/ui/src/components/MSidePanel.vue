@@ -10,7 +10,7 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
 }>();
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { modelValue, mobileOnly = false } = defineProps<{
   modelValue: boolean;
   mobileOnly?: boolean;

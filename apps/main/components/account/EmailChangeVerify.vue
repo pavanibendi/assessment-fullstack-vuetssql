@@ -12,7 +12,6 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
 }>();
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const { modelValue } = defineProps<{
   modelValue: boolean;
 }>();
@@ -20,7 +19,7 @@ const { modelValue } = defineProps<{
 const { mutate, isLoading } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.account.emailChangeVerify.mutate(
-      v as EmailChangeVerifySchemaType
+      v as EmailChangeVerifySchemaType,
     ),
   onSuccess: () => {
     fetchUser();

@@ -7,7 +7,7 @@ import MBtnIcon from "./MBtnIcon.vue";
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { label, name, modelValue } = defineProps<{
   label: string;
   name: string;

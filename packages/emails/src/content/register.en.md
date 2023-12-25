@@ -15,4 +15,4 @@ The code is valid for 10 minutes.
 
 ## Your free trial is ready!
 
-You can start using Jdwly today on the free tier. Whenever you want to upgrade to a paid plan, you'll have a free trial for 7 days before we start billing you for the first site you make.
+You can start today on the free tier. Whenever you want to upgrade to a paid plan, you'll have a free trial for 7 days before we start billing you for the first site you make.

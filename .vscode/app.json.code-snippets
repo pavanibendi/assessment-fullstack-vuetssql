@@ -18,7 +18,6 @@
 		"description": "Vue 3 TS props",
 		"scope": "typescript",
 		"body": [
-			"// eslint-disable-next-line vue/no-setup-props-destructure",
 			"const { isTrue } = defineProps<{",
 			"  isTrue: boolean;",
 			"}>();",

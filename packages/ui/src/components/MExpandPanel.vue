@@ -6,7 +6,7 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { title, defaultOpen = false } = defineProps<{
   title: string;
   defaultOpen?: boolean;

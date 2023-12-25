@@ -16,7 +16,6 @@ const inactiveClasses = {
   black: "bg-gray-800 text-gray-100",
 };
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const {
   color = "white",
   tooltip,

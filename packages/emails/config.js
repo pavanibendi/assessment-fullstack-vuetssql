@@ -14,7 +14,7 @@ const fm = require("front-matter");
 
 module.exports = {
   baseURL: {
-    url: "https://static.jdwly.com/",
+    url: "https://static.example.com/",
     tags: ["img"],
   },
   build: {

@@ -1,12 +1,12 @@
 import { FastifyPluginCallback } from "fastify";
-import { prisma } from "../prisma-client";
+import { db, sql } from "../db";
 
 export const healthRouter: FastifyPluginCallback = (fastify, options, done) => {
   fastify.get("/", async () => {
     return { status: "ok" };
   });
   fastify.get("/db", async () => {
-    const queryResult = await prisma.$queryRaw`SELECT 1 + 1 as "onePlusOne"`;
+    const queryResult = await db.execute(sql`SELECT 1+1 as result`);
     return { status: "ok", queryResult };
   });
   done();

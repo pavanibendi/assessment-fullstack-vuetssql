@@ -2,10 +2,7 @@
     "recommendations": [
         "dbaeumer.vscode-eslint",
         "vue.volar",
-        "Prisma.prisma",
-        "mtxr.sqltools",
         "ChakrounAnas.turbo-console-log",
-        "lokalise.i18n-ally",
         "aaron-bond.better-comments",
         "bradlc.vscode-tailwindcss"
     ]

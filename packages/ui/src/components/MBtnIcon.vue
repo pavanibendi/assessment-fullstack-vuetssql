@@ -41,7 +41,7 @@ const variantClasses = {
     gray: "text-gray-600 hover:bg-gray-50 focus:bg-gray-100",
   },
 };
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const {
   variant = "primary",
   color = "gray",

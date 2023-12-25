@@ -15,7 +15,7 @@ const textColors = {
   success: "text-success-700",
   error: "text-error-700",
 };
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const {
   modelValue = false,
   message,

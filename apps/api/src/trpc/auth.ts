@@ -20,7 +20,7 @@ export type MyJwtPayload = {
   userId: string;
 };
 export const auth = router({
-  refresh: publicProcedure.mutation(async ({ ctx: { prisma, req, res } }) => {
+  refresh: publicProcedure.mutation(async ({ ctx: { db, req, res } }) => {
     const refreshToken = getCookie({ req, name: "refreshToken" });
     if (!refreshToken) {
       throw new trpcError({
@@ -39,7 +39,7 @@ export const auth = router({
         code: "UNAUTHORIZED",
       });
     }
-    const user = await prisma.users.findFirst({
+    const user = await db.users.findFirst({
       where: { id: payload.userId },
     });
     if (!user) {
@@ -72,10 +72,10 @@ export const auth = router({
   }),
   login: publicProcedure
     .input(loginSchema)
-    .mutation(async ({ input, ctx: { prisma, res } }) => {
+    .mutation(async ({ input, ctx: { db, res } }) => {
       const { email, password } = input;
       const emailNormalized = email.toLowerCase();
-      const user = await prisma.users.findFirst({
+      const user = await db.users.findFirst({
         where: { email: emailNormalized, emailVerified: true },
       });
       // check 404
@@ -118,10 +118,10 @@ export const auth = router({
     }),
   register: publicProcedure
     .input(registerSchema)
-    .mutation(async ({ input, ctx: { prisma } }) => {
+    .mutation(async ({ input, ctx: { db } }) => {
       const { name, email, password } = input;
       const emailNormalized = email.toLowerCase();
-      const user = await prisma.users.findUnique({
+      const user = await db.users.findUnique({
         where: { email: emailNormalized },
       });
       // check 400
@@ -133,7 +133,7 @@ export const auth = router({
       // hash password
       const hashedPassword = await bcryptjs.hash(password, salt);
       // create user
-      const createdUser = await prisma.users.create({
+      const createdUser = await db.users.create({
         data: {
           name,
           email: emailNormalized,
@@ -143,7 +143,7 @@ export const auth = router({
       // create random otpCode
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
       // create verify request
-      const verifyRequest = await prisma.emailVerifications.create({
+      const verifyRequest = await db.emailVerifications.create({
         data: {
           userId: createdUser.id,
           email: emailNormalized,
@@ -161,12 +161,12 @@ export const auth = router({
     }),
   emailVerifySubmit: publicProcedure
     .input(emailVerifySubmitSchema)
-    .mutation(async ({ input, ctx: { prisma } }) => {
+    .mutation(async ({ input, ctx: { db } }) => {
       const { email, otpCode } = input;
       const emailNormalized = email.toLowerCase();
       // get requests for this email within the last 10 minutes
       const timeBefore10Minutes = new Date(Date.now() - 10 * 60 * 1000);
-      const verifyRequest = await prisma.emailVerifications.findFirst({
+      const verifyRequest = await db.emailVerifications.findFirst({
         where: {
           email: emailNormalized,
           createdAt: {
@@ -183,7 +183,7 @@ export const auth = router({
       }
       // if valid, update user to verified
       if (verifyRequest.otpCode === otpCode) {
-        await prisma.users.update({
+        await db.users.update({
           where: { id: verifyRequest.userId },
           data: { emailVerified: true },
         });
@@ -192,7 +192,7 @@ export const auth = router({
         };
       }
       // if invalid, increment attempts
-      await prisma.emailVerifications.update({
+      await db.emailVerifications.update({
         where: { id: verifyRequest.id },
         data: { attempts: { increment: 1 } },
       });
@@ -206,11 +206,11 @@ export const auth = router({
         email: z.string().email(),
       })
     )
-    .mutation(async ({ input, ctx: { prisma } }) => {
+    .mutation(async ({ input, ctx: { db } }) => {
       const { email } = input;
       const emailNormalized = email.toLowerCase();
       // get user
-      const user = await prisma.users.findFirst({
+      const user = await db.users.findFirst({
         where: { email: emailNormalized, emailVerified: false },
       });
       // check 404
@@ -222,7 +222,7 @@ export const auth = router({
       // create random otpCode
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
       // create verify request
-      const verifyRequest = await prisma.emailVerifications.create({
+      const verifyRequest = await db.emailVerifications.create({
         data: {
           userId: user.id,
           email: emailNormalized,
@@ -240,11 +240,11 @@ export const auth = router({
     }),
   passwordResetRequest: publicProcedure
     .input(passwordResetRequestSchema)
-    .mutation(async ({ input, ctx: { prisma } }) => {
+    .mutation(async ({ input, ctx: { db } }) => {
       const { email } = input;
       const emailNormalized = email.toLowerCase();
       // get user
-      const user = await prisma.users.findFirst({
+      const user = await db.users.findFirst({
         where: { email: emailNormalized, emailVerified: true },
       });
       // check 404
@@ -257,7 +257,7 @@ export const auth = router({
       const token = crypto.randomBytes(64).toString("hex");
 
       // create reset request
-      const resetRequest = await prisma.passwordResetRequests.create({
+      const resetRequest = await db.passwordResetRequests.create({
         data: {
           userId: user.id,
           token,
@@ -274,11 +274,11 @@ export const auth = router({
     }),
   passwordResetSubmit: publicProcedure
     .input(passwordResetSubmitSchema)
-    .mutation(async ({ input, ctx: { prisma } }) => {
+    .mutation(async ({ input, ctx: { db } }) => {
       const { email, token, newPassword } = input;
       // get user
       const normalizedEmail = email.toLowerCase();
-      const user = await prisma.users.findFirst({
+      const user = await db.users.findFirst({
         where: { email: normalizedEmail, emailVerified: true },
       });
       // check 404
@@ -288,7 +288,7 @@ export const auth = router({
         });
       }
       // get request
-      const resetRequest = await prisma.passwordResetRequests.findFirst({
+      const resetRequest = await db.passwordResetRequests.findFirst({
         where: { userId: user.id, token },
       });
       // check 404
@@ -300,7 +300,7 @@ export const auth = router({
       // hash password
       const hashedPassword = await bcryptjs.hash(newPassword, salt);
       // update user
-      await prisma.users.update({
+      await db.users.update({
         where: { id: user.id },
         data: { hashedPassword },
       });

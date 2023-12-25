@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useIntersectionObserver } from "@vueuse/core";
 import { PhotoIcon } from "@heroicons/vue/24/solid";
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const {
   src,
   srcLazy,

@@ -26,7 +26,6 @@ const dotColorClasses = {
   gray: "bg-gray-400",
 };
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const {
   label,
   loading = false,

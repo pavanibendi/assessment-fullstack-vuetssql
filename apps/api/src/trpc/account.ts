@@ -6,13 +6,14 @@ import {
 } from "@mono/validation/lib/account";
 import { router, trpcError, protectedProcedure } from "../trpc";
 import { sendEmailService } from "../notifications/email";
+import { eq } from "drizzle-orm";
+
 export const account = router({
-  me: protectedProcedure.query(async ({ ctx: { prisma, user } }) => {
+  me: protectedProcedure.query(async ({ ctx: { db, user } }) => {
     const { userId } = user;
-    console.debug("🚀 ~ me:protectedProcedure.query ~ userId", userId);
-    const targetUser = await prisma.users.findUnique({
-      where: { id: userId },
-      select: {
+    const targetUser = await db.query.user.findFirst({
+      where: (user) => eq(user.id, userId),
+      columns: {
         name: true,
         email: true,
       },
@@ -28,11 +29,11 @@ export const account = router({
   }),
   passwordChange: protectedProcedure
     .input(passwordChangeSchema)
-    .mutation(async ({ ctx: { prisma, user }, input }) => {
+    .mutation(async ({ ctx: { db, user, dbSchema }, input }) => {
       const { userId } = user;
       const { password, newPassword } = input;
-      const targetUser = await prisma.users.findUnique({
-        where: { id: userId },
+      const targetUser = await db.query.user.findFirst({
+        where: (user) => eq(user.id, userId),
       });
       if (!targetUser) {
         throw new trpcError({
@@ -49,24 +50,25 @@ export const account = router({
         });
       }
       const hashedPassword = await bcryptjs.hash(newPassword, 10);
-      await prisma.users.update({
-        where: { id: userId },
-        data: {
+      await db
+        .update(dbSchema.user)
+        .set({
           hashedPassword,
-        },
-      });
+        })
+        .where(eq(dbSchema.user, userId));
+
       return {
         success: true,
       };
     }),
   emailChangeRequest: protectedProcedure
     .input(emailChangeRequestSchema)
-    .mutation(async ({ ctx: { prisma, user }, input }) => {
+    .mutation(async ({ ctx: { db, user }, input }) => {
       const { userId } = user;
       const { email, password } = input;
       const emailNormalized = email.toLowerCase();
-      const targetUser = await prisma.users.findUnique({
-        where: { id: userId },
+      const targetUser = await db.query.user.findFirst({
+        where: (user) => eq(user.id, userId),
       });
       if (!targetUser) {
         throw new trpcError({
@@ -87,7 +89,7 @@ export const account = router({
         .toString()
         .padStart(6, "0");
       // create change request record
-      await prisma.emailChangeRequests.create({
+      await db.query.emailChangeRequests.create({
         data: {
           userId,
           otpCode,
@@ -105,10 +107,10 @@ export const account = router({
     }),
   emailChangeVerify: protectedProcedure
     .input(emailChangeVerifySchema)
-    .mutation(async ({ ctx: { prisma, user }, input }) => {
+    .mutation(async ({ ctx: { db, user }, input }) => {
       const { userId } = user;
       const { otpCode } = input;
-      const targetUser = await prisma.users.findUnique({
+      const targetUser = await db.users.findUnique({
         where: { id: userId },
       });
       if (!targetUser) {
@@ -116,7 +118,7 @@ export const account = router({
           code: "NOT_FOUND",
         });
       }
-      const targetChangeRequest = await prisma.emailChangeRequests.findFirst({
+      const targetChangeRequest = await db.emailChangeRequests.findFirst({
         where: {
           userId,
           otpCode,
@@ -131,7 +133,7 @@ export const account = router({
         });
       }
       // update user email
-      await prisma.users.update({
+      await db.users.update({
         where: { id: userId },
         data: {
           email: targetChangeRequest.newEmail,

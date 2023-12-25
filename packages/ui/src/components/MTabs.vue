@@ -2,7 +2,7 @@
 import { useRoute, RouterLink } from "vue-router";
 import type { RouteLocationNamedRaw } from "vue-router";
 import type { ConcreteComponent } from "vue";
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const { tabs, LinkComponent = RouterLink } = defineProps<{
   tabs: { name: string; to: RouteLocationNamedRaw }[];
   // eslint-disable-next-line

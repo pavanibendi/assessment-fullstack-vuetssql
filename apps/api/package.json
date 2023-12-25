@@ -6,40 +6,32 @@
     "dev": "ts-node-dev src/app.ts",
     "start": "ts-node --transpile-only src/app.ts",
     "typecheck": "tsc --noEmit",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:pull": "prisma db pull && prisma generate",
-    "db:migrate:reset": "prisma migrate reset",
-    "db:migrate:create": "ts-node prisma/createMigration.ts",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "lint": "eslint --ext .ts src",
+    "db:generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.421.0",
-    "@aws-sdk/client-sqs": "^3.421.0",
-    "@aws-sdk/s3-presigned-post": "^3.421.0",
     "@fastify/cookie": "^9.1.0",
     "@fastify/cors": "^8.4.0",
     "@mono/emails": "workspace:*",
     "@mono/tsconfig": "workspace:*",
     "@mono/validation": "workspace:*",
-    "@prisma/client": "~5.3.1",
     "@trpc/server": "^10.38.4",
     "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.29.1",
     "fastify": "^4.23.2",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "~5.3.1",
-    "sqs-consumer": "^7.3.0",
+    "postgres": "^3.4.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
     "@mono/eslint-config-typescript": "workspace:*",
+    "@mono/tsconfig": "workspace:*",
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.4",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/node": "^18.16.0",
+    "drizzle-kit": "^0.20.7",
     "ts-node-dev": "^2.0.0"
   }
 }

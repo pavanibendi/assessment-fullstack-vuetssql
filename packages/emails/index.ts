@@ -60,11 +60,10 @@ export const sendEmail = async (
     const html = Mustache.render(template, { data });
     const subject = templateTitles[templateName][locale];
     const command = new SendEmailCommand({
-      Source: "Jdwly <support@jdwly.com>",
+      Source: "Support <support@example.com>",
       Destination: {
         ToAddresses: [userEmail],
       },
-      // ConfigurationSetName: "jdwly-ses",
       Message: {
         Subject: {
           Data: subject,

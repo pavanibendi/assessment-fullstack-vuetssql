@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { MaybeRef } from "@vueuse/core";
+import { type MaybeRef } from "@vueuse/core";
 
 const colorClasses = {
   primary: "bg-primary-100 text-primary-800",

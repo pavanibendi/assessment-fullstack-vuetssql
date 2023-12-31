@@ -12,6 +12,8 @@ import { router, trpcError, publicProcedure } from "../trpc";
 import { sendEmailService } from "../notifications/email";
 import { setCookie, getCookie, clearCookie } from "../functions/cookies";
 import { z } from "zod";
+import { db, schema } from "../db";
+import { isNull, eq, isNotNull, gte, sql, and, desc } from "drizzle-orm";
 
 const salt = 10;
 const jwtSecret = process.env.JWT_SECRET as string;
@@ -20,7 +22,7 @@ export type MyJwtPayload = {
   userId: string;
 };
 export const auth = router({
-  refresh: publicProcedure.mutation(async ({ ctx: { db, req, res } }) => {
+  refresh: publicProcedure.mutation(async ({ ctx: { req, res } }) => {
     const refreshToken = getCookie({ req, name: "refreshToken" });
     if (!refreshToken) {
       throw new trpcError({
@@ -39,8 +41,8 @@ export const auth = router({
         code: "UNAUTHORIZED",
       });
     }
-    const user = await db.users.findFirst({
-      where: { id: payload.userId },
+    const user = await db.query.user.findFirst({
+      where: eq(schema.user.id, payload.userId),
     });
     if (!user) {
       throw new trpcError({
@@ -72,11 +74,14 @@ export const auth = router({
   }),
   login: publicProcedure
     .input(loginSchema)
-    .mutation(async ({ input, ctx: { db, res } }) => {
+    .mutation(async ({ input, ctx: { res } }) => {
       const { email, password } = input;
       const emailNormalized = email.toLowerCase();
-      const user = await db.users.findFirst({
-        where: { email: emailNormalized, emailVerified: true },
+      const user = await db.query.user.findFirst({
+        where: and(
+          eq(schema.user.email, emailNormalized),
+          isNotNull(schema.user.emailVerified)
+        ),
       });
       // check 404
       if (!user) {
@@ -118,11 +123,11 @@ export const auth = router({
     }),
   register: publicProcedure
     .input(registerSchema)
-    .mutation(async ({ input, ctx: { db } }) => {
+    .mutation(async ({ input }) => {
       const { name, email, password } = input;
       const emailNormalized = email.toLowerCase();
-      const user = await db.users.findUnique({
-        where: { email: emailNormalized },
+      const user = await db.query.user.findFirst({
+        where: eq(schema.user.email, emailNormalized),
       });
       // check 400
       if (user) {
@@ -133,23 +138,25 @@ export const auth = router({
       // hash password
       const hashedPassword = await bcryptjs.hash(password, salt);
       // create user
-      const createdUser = await db.users.create({
-        data: {
+      const [createdUser] = await db
+        .insert(schema.user)
+        .values({
           name,
           email: emailNormalized,
           hashedPassword,
-        },
-      });
+        })
+        .returning();
       // create random otpCode
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
       // create verify request
-      const verifyRequest = await db.emailVerifications.create({
-        data: {
+      const [verifyRequest] = await db
+        .insert(schema.emailVerification)
+        .values({
           userId: createdUser.id,
           email: emailNormalized,
           otpCode,
-        },
-      });
+        })
+        .returning();
       // notify user
       sendEmailService(emailNormalized, "register", "en", {
         userName: name,
@@ -161,19 +168,17 @@ export const auth = router({
     }),
   emailVerifySubmit: publicProcedure
     .input(emailVerifySubmitSchema)
-    .mutation(async ({ input, ctx: { db } }) => {
+    .mutation(async ({ input }) => {
       const { email, otpCode } = input;
       const emailNormalized = email.toLowerCase();
       // get requests for this email within the last 10 minutes
       const timeBefore10Minutes = new Date(Date.now() - 10 * 60 * 1000);
-      const verifyRequest = await db.emailVerifications.findFirst({
-        where: {
-          email: emailNormalized,
-          createdAt: {
-            gte: timeBefore10Minutes,
-          },
-        },
-        orderBy: { createdAt: "desc" },
+      const verifyRequest = await db.query.emailVerification.findFirst({
+        where: and(
+          eq(schema.emailVerification.email, emailNormalized),
+          gte(schema.emailVerification.createdAt, timeBefore10Minutes)
+        ),
+        orderBy: desc(schema.emailVerification.createdAt),
       });
       // check 400
       if (!verifyRequest || verifyRequest.attempts >= 5) {
@@ -183,19 +188,20 @@ export const auth = router({
       }
       // if valid, update user to verified
       if (verifyRequest.otpCode === otpCode) {
-        await db.users.update({
-          where: { id: verifyRequest.userId },
-          data: { emailVerified: true },
-        });
+        await db
+          .update(schema.user)
+          .set({
+            emailVerified: new Date(),
+          })
+          .where(eq(schema.user.id, verifyRequest.userId));
         return {
           success: true,
         };
       }
       // if invalid, increment attempts
-      await db.emailVerifications.update({
-        where: { id: verifyRequest.id },
-        data: { attempts: { increment: 1 } },
-      });
+      await db.execute(
+        sql`UPDATE email_verifications SET attempts = attempts + 1 WHERE id = ${verifyRequest.id}`
+      );
       return {
         success: false,
       };
@@ -206,12 +212,15 @@ export const auth = router({
         email: z.string().email(),
       })
     )
-    .mutation(async ({ input, ctx: { db } }) => {
+    .mutation(async ({ input }) => {
       const { email } = input;
       const emailNormalized = email.toLowerCase();
       // get user
-      const user = await db.users.findFirst({
-        where: { email: emailNormalized, emailVerified: false },
+      const user = await db.query.user.findFirst({
+        where: and(
+          eq(schema.user.email, emailNormalized),
+          isNull(schema.user.emailVerified)
+        ),
       });
       // check 404
       if (!user) {
@@ -222,13 +231,14 @@ export const auth = router({
       // create random otpCode
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
       // create verify request
-      const verifyRequest = await db.emailVerifications.create({
-        data: {
+      const [verifyRequest] = await db
+        .insert(schema.emailVerification)
+        .values({
           userId: user.id,
           email: emailNormalized,
           otpCode,
-        },
-      });
+        })
+        .returning();
       // notify user
       sendEmailService(emailNormalized, "register", "en", {
         userName: user.name,
@@ -240,12 +250,15 @@ export const auth = router({
     }),
   passwordResetRequest: publicProcedure
     .input(passwordResetRequestSchema)
-    .mutation(async ({ input, ctx: { db } }) => {
+    .mutation(async ({ input }) => {
       const { email } = input;
       const emailNormalized = email.toLowerCase();
       // get user
-      const user = await db.users.findFirst({
-        where: { email: emailNormalized, emailVerified: true },
+      const user = await db.query.user.findFirst({
+        where: and(
+          eq(schema.user.email, emailNormalized),
+          isNotNull(schema.user.emailVerified)
+        ),
       });
       // check 404
       if (!user) {
@@ -257,12 +270,13 @@ export const auth = router({
       const token = crypto.randomBytes(64).toString("hex");
 
       // create reset request
-      const resetRequest = await db.passwordResetRequests.create({
-        data: {
+      const [resetRequest] = await db
+        .insert(schema.passwordResetRequest)
+        .values({
           userId: user.id,
           token,
-        },
-      });
+        })
+        .returning();
       // notify user
       sendEmailService(emailNormalized, "passwordResetRequest", "en", {
         userName: user.name,
@@ -274,12 +288,15 @@ export const auth = router({
     }),
   passwordResetSubmit: publicProcedure
     .input(passwordResetSubmitSchema)
-    .mutation(async ({ input, ctx: { db } }) => {
+    .mutation(async ({ input }) => {
       const { email, token, newPassword } = input;
       // get user
       const normalizedEmail = email.toLowerCase();
-      const user = await db.users.findFirst({
-        where: { email: normalizedEmail, emailVerified: true },
+      const user = await db.query.user.findFirst({
+        where: and(
+          eq(schema.user.email, normalizedEmail),
+          isNotNull(schema.user.emailVerified)
+        ),
       });
       // check 404
       if (!user) {
@@ -288,8 +305,11 @@ export const auth = router({
         });
       }
       // get request
-      const resetRequest = await db.passwordResetRequests.findFirst({
-        where: { userId: user.id, token },
+      const resetRequest = await db.query.passwordResetRequest.findFirst({
+        where: and(
+          eq(schema.passwordResetRequest.token, token),
+          eq(schema.passwordResetRequest.userId, user.id)
+        ),
       });
       // check 404
       if (!resetRequest) {
@@ -300,10 +320,12 @@ export const auth = router({
       // hash password
       const hashedPassword = await bcryptjs.hash(newPassword, salt);
       // update user
-      await db.users.update({
-        where: { id: user.id },
-        data: { hashedPassword },
-      });
+      await db
+        .update(schema.user)
+        .set({
+          hashedPassword,
+        })
+        .where(eq(schema.user.id, user.id));
       // return
       return {
         success: true,

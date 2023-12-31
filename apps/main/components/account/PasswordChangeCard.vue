@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   passwordChangeSchema,
-  PasswordChangeSchemaType,
+  type PasswordChangeSchemaType,
 } from "@mono/validation/lib/account";
 const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();
@@ -10,7 +10,7 @@ const { refresh } = defineProps<{
   refresh: () => void;
 }>();
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.account.passwordChange.mutate(v as PasswordChangeSchemaType),
   onSuccess: () => {
@@ -48,7 +48,7 @@ const { mutate, isLoading } = $useMutation({
             type="submit"
             color="primary"
             :disabled="!valid"
-            :loading="isLoading"
+            :loading="isPending"
           >
             Change Password
           </MBtn>

@@ -5,7 +5,7 @@ import {
   createTRPCProxyClient,
   httpBatchLink,
   loggerLink,
-  TRPCLink,
+  type TRPCLink,
 } from "@trpc/client";
 import { useAuthStore } from "@/store/auth";
 

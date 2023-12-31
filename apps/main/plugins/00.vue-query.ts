@@ -20,9 +20,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     defaultOptions: {
       queries: {
         staleTime: 5000,
-        onError: (error) => {
-          console.error(error);
-        },
       },
       mutations: {
         onError: (error) => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   emailVerifySubmitSchema,
-  EmailVerifySubmitSchemaType,
+  type EmailVerifySubmitSchemaType,
 } from "@mono/validation/lib/auth";
 
 definePageMeta({
@@ -12,7 +12,7 @@ const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();
 const router = useRouter();
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.auth.emailVerifySubmit.mutate(v as EmailVerifySubmitSchemaType),
   onSuccess: () => {
@@ -67,7 +67,7 @@ const newCodeMutation = $useMutation({
           size="lg"
           class="mx-auto mt-4 w-1/2"
           type="submit"
-          :loading="isLoading"
+          :loading="isPending"
         >
           Verify
         </MBtn>
@@ -78,7 +78,7 @@ const newCodeMutation = $useMutation({
         <MBtn
           variant="text"
           class="w-full"
-          :loading="newCodeMutation.isLoading.value"
+          :loading="newCodeMutation.isPending.value"
           @click="newCodeMutation.mutate"
         >
           Request New Code

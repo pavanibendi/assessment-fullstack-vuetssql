@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ConcreteComponent } from "vue";
+import { computed, type ConcreteComponent } from "vue";
 import type { RouteLocationNamedRaw } from "vue-router";
 import { StarIcon } from "@heroicons/vue/20/solid";
 import { RouterLink } from "vue-router";

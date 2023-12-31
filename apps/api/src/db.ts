@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import postgres from "postgres";
 import { schema } from "./schema";
@@ -11,4 +10,4 @@ const db = drizzle(client, {
   schema,
 });
 
-export { db, sql };
+export { db, schema };

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   emailChangeVerifySchema,
-  EmailChangeVerifySchemaType,
+  type EmailChangeVerifySchemaType,
 } from "@mono/validation/lib/account";
 import { useAuthStore } from "@/store/auth";
 const { $useMutation } = useNuxtApp();
@@ -16,7 +16,7 @@ const { modelValue } = defineProps<{
   modelValue: boolean;
 }>();
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.account.emailChangeVerify.mutate(
       v as EmailChangeVerifySchemaType,
@@ -56,7 +56,7 @@ const { mutate, isLoading } = $useMutation({
           type="submit"
           color="primary"
           class="inline-flex w-full sm:col-start-2"
-          :loading="isLoading"
+          :loading="isPending"
         >
           Verify
         </MBtn>

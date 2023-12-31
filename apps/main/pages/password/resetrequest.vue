@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import {
   passwordResetRequestSchema,
-  PasswordResetRequestSchemaType,
+  type PasswordResetRequestSchemaType,
 } from "@mono/validation/lib/auth";
 const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();
 const router = useRouter();
 const email = ref("");
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.auth.passwordResetRequest.mutate(
-      v as PasswordResetRequestSchemaType
+      v as PasswordResetRequestSchemaType,
     ),
   onSuccess: () => {
     router.push({
@@ -47,7 +47,7 @@ const { mutate, isLoading } = $useMutation({
           size="lg"
           class="mx-auto mt-4 w-1/2"
           type="submit"
-          :loading="isLoading"
+          :loading="isPending"
         >
           Submit
         </MBtn>

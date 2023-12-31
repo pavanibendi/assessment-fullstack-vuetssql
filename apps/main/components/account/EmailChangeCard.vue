@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   emailChangeRequestSchema,
-  EmailChangeRequestSchemaType,
+  type EmailChangeRequestSchemaType,
 } from "@mono/validation/lib/account";
 
 const { refresh } = defineProps<{
@@ -14,7 +14,7 @@ const trpcClient = useTrpcClient();
 const requestPending = ref(false);
 const email = ref("");
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.account.emailChangeRequest.mutate(
       v as EmailChangeRequestSchemaType,
@@ -60,7 +60,7 @@ watch(requestPending, (value) => {
             type="submit"
             color="primary"
             :disabled="valid === false || requestPending === true"
-            :loading="isLoading"
+            :loading="isPending"
           >
             Request Change
           </MBtn>

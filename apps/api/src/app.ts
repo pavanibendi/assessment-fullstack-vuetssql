@@ -5,7 +5,6 @@ import cookie from "@fastify/cookie";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { createContext } from "./context";
 import { appRouter } from "./trpc/router";
-import { startSqsConsumers } from "./sqs";
 
 const server = fastify({
   maxParamLength: 5000,
@@ -42,7 +41,6 @@ const host = process.env.HOST || "0.0.0.0";
 
 (async () => {
   try {
-    await startSqsConsumers();
     await server.listen({ port, host });
     console.info(`🚀 Fastify server ready at http://${hostClickable}:${port}`);
     console.info(`🚀 is this automatically deployed?`);

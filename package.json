@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "npkill": "^0.11.3",
-    "turbo": "^1.10.14"
+    "turbo": "^1.11.2"
   },
   "engines": {
     "node": ">=18.0.0"

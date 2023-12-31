@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ConcreteComponent } from "vue";
+import { type ConcreteComponent } from "vue";
+
 const emit = defineEmits<{
   (e: "item:click", value: string): void;
 }>();

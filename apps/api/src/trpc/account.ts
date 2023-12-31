@@ -6,10 +6,12 @@ import {
 } from "@mono/validation/lib/account";
 import { router, trpcError, protectedProcedure } from "../trpc";
 import { sendEmailService } from "../notifications/email";
-import { eq } from "drizzle-orm";
+import { db, schema } from "../db";
+import { and, eq, gte } from "drizzle-orm";
+import { clearCookie } from "../functions/cookies";
 
 export const account = router({
-  me: protectedProcedure.query(async ({ ctx: { db, user } }) => {
+  me: protectedProcedure.query(async ({ ctx: { user } }) => {
     const { userId } = user;
     const targetUser = await db.query.user.findFirst({
       where: (user) => eq(user.id, userId),
@@ -29,7 +31,7 @@ export const account = router({
   }),
   passwordChange: protectedProcedure
     .input(passwordChangeSchema)
-    .mutation(async ({ ctx: { db, user, dbSchema }, input }) => {
+    .mutation(async ({ ctx: { user }, input }) => {
       const { userId } = user;
       const { password, newPassword } = input;
       const targetUser = await db.query.user.findFirst({
@@ -51,11 +53,11 @@ export const account = router({
       }
       const hashedPassword = await bcryptjs.hash(newPassword, 10);
       await db
-        .update(dbSchema.user)
+        .update(schema.user)
         .set({
           hashedPassword,
         })
-        .where(eq(dbSchema.user, userId));
+        .where(eq(schema.user, userId));
 
       return {
         success: true,
@@ -63,7 +65,7 @@ export const account = router({
     }),
   emailChangeRequest: protectedProcedure
     .input(emailChangeRequestSchema)
-    .mutation(async ({ ctx: { db, user }, input }) => {
+    .mutation(async ({ ctx: { user }, input }) => {
       const { userId } = user;
       const { email, password } = input;
       const emailNormalized = email.toLowerCase();
@@ -89,12 +91,10 @@ export const account = router({
         .toString()
         .padStart(6, "0");
       // create change request record
-      await db.query.emailChangeRequests.create({
-        data: {
-          userId,
-          otpCode,
-          newEmail: emailNormalized,
-        },
+      await db.insert(schema.emailChangeRequest).values({
+        userId,
+        otpCode,
+        newEmail: emailNormalized,
       });
       // notify user
       await sendEmailService(emailNormalized, "emailChangeOtp", "en", {
@@ -107,25 +107,26 @@ export const account = router({
     }),
   emailChangeVerify: protectedProcedure
     .input(emailChangeVerifySchema)
-    .mutation(async ({ ctx: { db, user }, input }) => {
+    .mutation(async ({ ctx: { user }, input }) => {
       const { userId } = user;
       const { otpCode } = input;
-      const targetUser = await db.users.findUnique({
-        where: { id: userId },
+      const targetUser = await db.query.user.findFirst({
+        where: (user) => eq(user.id, userId),
       });
       if (!targetUser) {
         throw new trpcError({
           code: "NOT_FOUND",
         });
       }
-      const targetChangeRequest = await db.emailChangeRequests.findFirst({
-        where: {
-          userId,
-          otpCode,
-          createdAt: {
-            gte: new Date(Date.now() - 1000 * 60 * 10),
-          },
-        },
+      const targetChangeRequest = await db.query.emailChangeRequest.findFirst({
+        where: and(
+          eq(schema.emailChangeRequest.userId, userId),
+          eq(schema.emailChangeRequest.otpCode, otpCode),
+          gte(
+            schema.emailChangeRequest.createdAt,
+            new Date(Date.now() - 1000 * 60 * 10)
+          )
+        ),
       });
       if (!targetChangeRequest) {
         throw new trpcError({
@@ -133,23 +134,26 @@ export const account = router({
         });
       }
       // update user email
-      await db.users.update({
-        where: { id: userId },
-        data: {
+      await db
+        .update(schema.user)
+        .set({
           email: targetChangeRequest.newEmail,
-        },
-      });
+        })
+        .where(eq(schema.user, userId));
       // return
       return {
         success: true,
       };
     }),
   logout: protectedProcedure.mutation(({ ctx: { res } }) => {
-    res.clearCookie("accessToken", {
-      httpOnly: true,
-      path: "/",
+    clearCookie({
+      res,
+      name: "accessToken",
     });
-    res.clearCookie("refreshToken", { httpOnly: true, path: "/" });
+    clearCookie({
+      res,
+      name: "refreshToken",
+    });
     return {
       success: true,
     };

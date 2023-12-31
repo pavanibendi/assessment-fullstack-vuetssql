@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import jwt from "jsonwebtoken";
-import { createContext } from "./context";
-import { MyJwtPayload } from "./trpc/auth";
+import { type createContext } from "./context";
+import { type MyJwtPayload } from "./trpc/auth";
 import { getCookie, clearCookie } from "./functions/cookies";
 const t = initTRPC.context<typeof createContext>().create();
 
@@ -15,7 +15,7 @@ const isUser = middleware(({ ctx: { req, res }, next }) => {
   // get user accessToken cookie and verify it
   const accessToken = getCookie({ req, name: "accessToken" });
   if (accessToken === undefined) {
-    throw new TRPCError({
+    throw new trpcError({
       code: "UNAUTHORIZED",
     });
   }

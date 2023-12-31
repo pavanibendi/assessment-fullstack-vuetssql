@@ -8,12 +8,16 @@
     "postinstall": {
       "outputs": []
     },
+    "nuxt:prepare": {
+      "outputs": [".nuxt/**", "!__paths.d.ts"],
+      "dependsOn": ["^typecheck"]
+    },
     "typecheck": {
-      "dependsOn": ["nuxt:prepare", "^typecheck"],
+      "dependsOn": ["nuxt:prepare"],
       "outputs": []
     },
     "lint": {
-      "outputs": []
+      "dependsOn": ["nuxt:prepare"]
     },
     "dev": {
       "cache": false,

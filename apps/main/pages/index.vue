@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { loginSchema, LoginSchemaType } from "@mono/validation/lib/auth";
+import { loginSchema, type LoginSchemaType } from "@mono/validation/lib/auth";
 import { useAuthStore } from "@/store/auth";
 definePageMeta({
   middleware: "auth-redirect",
@@ -9,7 +9,7 @@ const trpcClient = useTrpcClient();
 const router = useRouter();
 const { fetchUser } = useAuthStore();
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.auth.login.mutate(v as LoginSchemaType),
   onSuccess: async () => {
@@ -69,7 +69,7 @@ const { mutate, isLoading } = $useMutation({
           size="lg"
           class="mx-auto mt-4 w-1/2"
           type="submit"
-          :loading="isLoading"
+          :loading="isPending"
         >
           Login
         </MBtn>

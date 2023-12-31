@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { useForm } from "vee-validate";
 import { toFormValidator } from "@vee-validate/zod";
-import { ZodObject, ZodRawShape } from "zod";
+import { type ZodObject, type ZodRawShape } from "zod";
 
 const emit = defineEmits<{
   (e: "submit", values: unknown): void;

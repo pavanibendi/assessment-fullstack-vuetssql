@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { registerSchema, RegisterSchemaType } from "@mono/validation/lib/auth";
+import {
+  registerSchema,
+  type RegisterSchemaType,
+} from "@mono/validation/lib/auth";
 definePageMeta({
   middleware: "auth-redirect",
 });
@@ -9,7 +12,7 @@ const trpcClient = useTrpcClient();
 const router = useRouter();
 const email = ref("");
 
-const { mutate, isLoading } = $useMutation({
+const { mutate, isPending } = $useMutation({
   mutationFn: (v: unknown) =>
     trpcClient.auth.register.mutate(v as RegisterSchemaType),
   onSuccess: () => {
@@ -61,7 +64,7 @@ const { mutate, isLoading } = $useMutation({
           size="lg"
           class="mx-auto mt-4 w-1/2"
           type="submit"
-          :loading="isLoading"
+          :loading="isPending"
         >
           Create Account
         </MBtn>

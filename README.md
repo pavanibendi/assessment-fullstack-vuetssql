@@ -1,4 +1,4 @@
-# Example Monorepo
+# Vue 3, Typescript & SQL Assessment
 
 This is a monorepo for a fullstack typescript app, using Nuxt 3 on the frontend. It runs using [Turborepo](https://turbo.build/repo) & [pnpm](https://pnpm.io) Workspaces features.
 
@@ -10,12 +10,12 @@ Main technologies used in this app are:
 - Tailwindcss
 - Trpc Client, with TanStack Query to wrap the client
 
-### Monorepo Setup
+### Monorepo Structure
 
 This monorepo is broken down into two types of packages:
 
 - **Apps** - These are the applications that are deployed and have a runtime. They are located in the `apps` directory. They usually don't import other apps.
-- **Packages** - These are packages that are usually used by the apps, or things like "CDK" that are used in devops and don't require a runtime. They are located in the `packages` directory.
+- **Packages** - These are packages that are usually used by the apps, and don't have an independant runtime. They are located in the `packages` directory.
 
 ### Using The Monorepo
 

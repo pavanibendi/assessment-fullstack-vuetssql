@@ -5,5 +5,5 @@ export const EnvConfig = {
   JWT_SECRET: process.env.JWT_SECRET || "1234567890",
   DATABASE_URL:
     process.env.DATABASE_URL ||
-    "postgresql://postgres:postgres@localhost:5432/postgres",
+    "postgresql://postgres:postgres@localhost:5433/postgres",
 };

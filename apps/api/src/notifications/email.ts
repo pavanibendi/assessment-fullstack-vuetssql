@@ -1,6 +1,22 @@
-import { sendEmail } from "@mono/emails";
-import type { TemplateName, Language, emailData } from "@mono/emails";
-
+// import { sendEmail } from "@mono/emails";
+// import type { TemplateName, Language, emailData } from "@mono/emails";
+const languages = ["en", "fr"] as const;
+type Language = (typeof languages)[number];
+type TemplateName = "register" | "passwordResetRequest" | "emailChangeOtp";
+type emailData = {
+  userName?: string;
+  otpCode?: string;
+  token?: string;
+};
+const sendEmail = (
+  userEmail: string,
+  templateName: TemplateName,
+  locale: Language,
+  data: emailData
+) => {
+  console.table(data);
+  console.table({ userEmail, templateName, locale });
+};
 export const sendEmailService = async (
   userEmail: string,
   templateName: TemplateName,
@@ -8,10 +24,6 @@ export const sendEmailService = async (
   data: emailData
 ) => {
   try {
-    if (process.env.NODE_ENV === "development") {
-      console.table({ data });
-      return { success: true };
-    }
     await sendEmail(userEmail, templateName, locale, data);
     return { success: true };
   } catch (error) {

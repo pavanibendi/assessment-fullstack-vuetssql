@@ -10,13 +10,13 @@
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[typescript]": {
-        "editor.defaultFormatter": "Vue.volar"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[html]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[vue]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "Vue.volar"
     },
     "files.associations": {
         "*.css": "tailwindcss"
@@ -29,12 +29,8 @@
     "gitlens.views.repositories.branches.layout": "list",
     "extensions.ignoreRecommendations": false,
     "diffEditor.ignoreTrimWhitespace": false,
-    "i18n-ally.extract.autoDetect": true,
-    "i18n-ally.extract.keyMaxLength": 20,
-    "i18n-ally.annotations": false,
     "sqltools.codelensLanguages": [
         "sql",
         "pgsql"
     ],
-    "vue.features.complete.propNameCasing": "autoCamel"
 }

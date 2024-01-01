@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { loginSchema, type LoginSchemaType } from "@mono/validation/lib/auth";
 import { useAuthStore } from "@/store/auth";
-definePageMeta({
-  middleware: "auth-redirect",
-});
+
 const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();
 const router = useRouter();

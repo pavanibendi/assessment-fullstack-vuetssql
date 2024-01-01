@@ -1,8 +1,9 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { schema } from "./schema";
+import * as schema from "./schema";
+import { EnvConfig } from "./env.config";
 
-const databaseUrl = "postgres://postgres:postgres@localhost:5432/postgres";
+const databaseUrl = EnvConfig.DATABASE_URL;
 
 const client = postgres(databaseUrl);
 

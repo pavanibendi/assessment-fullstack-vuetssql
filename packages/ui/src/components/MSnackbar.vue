@@ -79,7 +79,6 @@ watch(show, (value) => {
               <div class="ml-4 flex flex-shrink-0">
                 <MBtnIcon
                   tooltip="Close"
-                  type="button"
                   variant="text"
                   @click="show = false"
                 >

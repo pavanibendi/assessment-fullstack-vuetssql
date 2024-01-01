@@ -4,10 +4,6 @@ import {
   type EmailVerifySubmitSchemaType,
 } from "@mono/validation/lib/auth";
 
-definePageMeta({
-  middleware: "auth-redirect",
-});
-
 const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();
 const router = useRouter();

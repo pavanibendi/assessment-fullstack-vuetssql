@@ -3,9 +3,6 @@ import {
   registerSchema,
   type RegisterSchemaType,
 } from "@mono/validation/lib/auth";
-definePageMeta({
-  middleware: "auth-redirect",
-});
 
 const { $useMutation } = useNuxtApp();
 const trpcClient = useTrpcClient();

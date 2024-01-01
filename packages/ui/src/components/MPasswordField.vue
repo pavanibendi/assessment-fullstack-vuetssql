@@ -8,10 +8,11 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 
-const { label, name, modelValue } = defineProps<{
+const { label, name, modelValue, disabled } = defineProps<{
   label: string;
   name: string;
   modelValue?: string;
+  disabled?: boolean;
 }>();
 
 const showPassword = ref(false);
@@ -23,6 +24,7 @@ const showPassword = ref(false);
     :name="name"
     :type="showPassword ? 'text' : 'password'"
     :label="label"
+    :disabled="disabled"
     @update:modelValue="(v) => emit('update:modelValue', v)"
   >
     <template #appendInner>

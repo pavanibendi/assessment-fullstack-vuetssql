@@ -1,10 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
+import { EnvConfig } from "../env.config";
 
 const cookieNamePrefix = "";
 const domainAsObj =
-  process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging"
-    ? { domain: ".jdwly.com" }
-    : {};
+  EnvConfig.NODE_ENV !== "development" ? { domain: ".myapp.com" } : {};
 
 export const setCookie = ({
   res,

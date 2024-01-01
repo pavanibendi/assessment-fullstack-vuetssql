@@ -37,8 +37,8 @@ const errorLink: TRPCLink<AppRouter> = () => {
 
 const apiUrls = {
   development: "http://localhost:3011/trpc",
-  staging: "https://gcx6cdgxtm.eu-west-1.awsapprunner.com/trpc",
-  production: "https://929djxtffb.eu-west-1.awsapprunner.com/trpc",
+  staging: "",
+  production: "",
 };
 
 export const useTrpcClient = () => {

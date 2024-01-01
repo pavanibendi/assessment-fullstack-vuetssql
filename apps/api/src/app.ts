@@ -5,6 +5,7 @@ import cookie from "@fastify/cookie";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { createContext } from "./context";
 import { appRouter } from "./trpc/router";
+import { EnvConfig } from "./env.config";
 
 const server = fastify({
   maxParamLength: 5000,
@@ -21,8 +22,9 @@ server.register(cookie, {
   parseOptions: {}, // options for parsing cookies
 } as FastifyCookieOptions);
 
+// !strict origin in production
 server.register(cors, {
-  origin: process.env.NODE_ENV !== "production", // todo: strict origin in production
+  origin: EnvConfig.NODE_ENV !== "production",
   credentials: true,
 });
 
@@ -34,10 +36,10 @@ server.register(fastifyTRPCPlugin, {
 import { healthRouter } from "./routes/health";
 server.register(healthRouter, { prefix: "/health" });
 
-const portWithDefault = process.env.PORT || "3011";
+const portWithDefault = EnvConfig.PORT;
 const port = parseInt(portWithDefault);
 const hostClickable = port === 8080 ? "0.0.0.0" : "localhost";
-const host = process.env.HOST || "0.0.0.0";
+const host = EnvConfig.HOST;
 
 (async () => {
   try {

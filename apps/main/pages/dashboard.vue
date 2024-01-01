@@ -1,14 +1,7 @@
-<script setup lang="ts">
-definePageMeta({
-  middleware: "auth-guard",
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <MRow>
-    <div class="mx-auto mt-12 basis-1/2">
-      <DashboardTabs />
-    </div>
     <div class="basis-full">
       <NuxtPage />
     </div>

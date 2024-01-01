@@ -1,3 +1,0 @@
-{
-  "extends": "@mono/tsconfig/node.json"
-}

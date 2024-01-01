@@ -11,5 +11,5 @@ const { show, message, color } = storeToRefs(snackStore);
     v-model="show"
     :message="message"
     :color="color"
-  ></MSnackbar>
+  />
 </template>

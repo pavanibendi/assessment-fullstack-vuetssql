@@ -14,9 +14,9 @@ import { setCookie, getCookie, clearCookie } from "../functions/cookies";
 import { z } from "zod";
 import { db, schema } from "../db";
 import { isNull, eq, isNotNull, gte, sql, and, desc } from "drizzle-orm";
-
+import { EnvConfig } from "../env.config";
 const salt = 10;
-const jwtSecret = process.env.JWT_SECRET as string;
+const jwtSecret = EnvConfig.JWT_SECRET;
 
 export type MyJwtPayload = {
   userId: string;
@@ -124,6 +124,7 @@ export const auth = router({
   register: publicProcedure
     .input(registerSchema)
     .mutation(async ({ input }) => {
+      console.log("🚀 ~ .mutation ~ input:", input);
       const { name, email, password } = input;
       const emailNormalized = email.toLowerCase();
       const user = await db.query.user.findFirst({

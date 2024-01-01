@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { type createContext } from "./context";
 import { type MyJwtPayload } from "./trpc/auth";
 import { getCookie, clearCookie } from "./functions/cookies";
+import { EnvConfig } from "./env.config";
 const t = initTRPC.context<typeof createContext>().create();
 
 export const middleware = t.middleware;
@@ -23,7 +24,7 @@ const isUser = middleware(({ ctx: { req, res }, next }) => {
   try {
     payload = jwt.verify(
       accessToken,
-      process.env.JWT_SECRET as string
+      EnvConfig.JWT_SECRET as string
     ) as MyJwtPayload;
   } catch (error) {
     clearCookie({

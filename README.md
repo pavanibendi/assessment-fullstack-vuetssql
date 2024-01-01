@@ -34,7 +34,7 @@ The app currently has a basic user accounts system with a few core auth features
 We want to introduce three new resource types in the API/DB, along with frontend UI that allows the user to interact with those resources:
 
 - Teams: A team is the definition which can own other resource types, and controls access permissions. The user who creates the team is the team owner.
-- Team Tasks: Team Owners can create tasks, mark tasks as done, or delere tasks.
+- Team Tasks: Team Owners can create tasks, mark tasks as done, or delete tasks.
 
 Bonus (if you have time):
 - Team Members Feature: Team owners can add or remove users to a team to grant them access. To keep things simple, we will assume a user can be directly added to a team just by their email directly by the team owner.

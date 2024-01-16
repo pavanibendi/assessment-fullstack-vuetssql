@@ -66,3 +66,13 @@ Thank you.
 *Note: No coding is expected for this. You can just leave an answer in a couple of paragraphs below.*
 
 Answer:
+I would be using Jest for testing this application. Jest is a popular, feature-rich framework that works well with Vue and TypeScript, offering good support for unit and integration tests. Testing Library for Vue complements Jest by providing utilities to test Vue components in a more user-centric way.
+
+Key test cases should include:
+
+	1.	Unit Tests for Components: Ensuring each component renders correctly, handles props and emits events as expected.
+	2.	API Integration Tests: Validating the interaction between the frontend and the API, particularly for new features like Teams and Team Tasks.
+	3.	End-to-End Tests: Using a tool like Cypress to test user flows, especially for the new navigation elements and task filtering/pagination features.
+	4.	Permission Tests: Specifically for the Team Members feature, to ensure correct access control is in place.
+
+These tests would ensure the robustness of both the new and existing features of the application.

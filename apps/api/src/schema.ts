@@ -1,4 +1,4 @@
-import { uuid, text, timestamp, pgTable, integer } from "drizzle-orm/pg-core";
+import { uuid, text, timestamp, pgTable, integer, pgEnum } from "drizzle-orm/pg-core";
 
 export const user = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -32,4 +32,32 @@ export const passwordResetRequest = pgTable("password_reset_requests", {
   userId: uuid("user_id").notNull(),
   token: text("token").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const team = pgTable("teams", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdBy: uuid("created_by").references(() => user.id)
+});
+
+export const teamMember = pgTable("team_members", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  teamId: uuid("team_id").references(() => team.id),
+  userId: uuid("user_id").references(() => user.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const statusEnum = pgEnum('status', ['todo', 'in-progress', 'review', 'complete']);
+
+// We can add additional columns such as story points etc.
+export const task = pgTable("tasks", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  status: statusEnum('status'),
+  assignedTo: uuid("assigned_to").references(() => user.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
